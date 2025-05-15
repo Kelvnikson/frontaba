@@ -7,10 +7,8 @@ app.use(cors());
 app.use(express.json());
 
 // Conexão com o MongoDB
-mongoose.connect(
-  "mongodb+srv://kelvbascont:7Qz7F921GytUbOkL@cluster1.apfrm69.mongodb.net/abats?retryWrites=true&w=majority&appName=Cluster1",
-  { useNewUrlParser: true, useUnifiedTopology: true }
-);
+mongoose.connect(process.env.MONGODB_URI);
+
 
 // Schema e Model do Paciente
 const PatientSchema = new mongoose.Schema({
