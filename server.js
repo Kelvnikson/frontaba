@@ -7,7 +7,10 @@ app.use(cors());
 app.use(express.json());
 
 // Conexão com o MongoDB
-mongoose.connect(process.env.MONGODB_URI);
+// Use a variável de ambiente para a conexão do MongoDB
+mongoose.connect(process.env.MONGODB_URI, {
+  // opções opcionais, se necessário
+});
 
 
 // Schema e Model do Paciente
