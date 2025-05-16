@@ -7,6 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 // Conexão com o MongoDB usando variável de ambiente
+console.log("Tentando conectar ao MongoDB...");
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("Conectado ao MongoDB"))
   .catch((err) => {
