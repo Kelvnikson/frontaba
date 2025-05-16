@@ -7,9 +7,12 @@ app.use(cors());
 app.use(express.json());
 
 // Conexão com o MongoDB usando variável de ambiente
-mongoose.connect(process.env.MONGODB_URI, {
-  // useNewUrlParser e useUnifiedTopology são opcionais e não necessários em versões recentes
-});
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log("Conectado ao MongoDB"))
+  .catch((err) => {
+    console.error("Erro ao conectar ao MongoDB:", err);
+    process.exit(1); // Encerra o app se não conectar
+  });
 
 // Schema e Model do Paciente
 const PatientSchema = new mongoose.Schema({
@@ -27,27 +30,48 @@ const Patient = mongoose.model("Patient", PatientSchema);
 
 // Listar todos os pacientes
 app.get("/patients", async (req, res) => {
-  const patients = await Patient.find();
-  res.json(patients);
+  try {
+    const patients = await Patient.find();
+    res.json(patients);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao buscar pacientes", details: err.message });
+  }
 });
 
 // Adicionar paciente
 app.post("/patients", async (req, res) => {
-  const patient = new Patient(req.body);
-  await patient.save();
-  res.json(patient);
+  try {
+    const patient = new Patient(req.body);
+    await patient.save();
+    res.json(patient);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao adicionar paciente", details: err.message });
+  }
 });
 
 // Editar paciente
 app.put("/patients/:id", async (req, res) => {
-  const patient = await Patient.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  res.json(patient);
+  try {
+    const patient = await Patient.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(patient);
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao editar paciente", details: err.message });
+  }
 });
 
 // Remover paciente
 app.delete("/patients/:id", async (req, res) => {
-  await Patient.findByIdAndDelete(req.params.id);
-  res.json({ ok: true });
+  try {
+    await Patient.findByIdAndDelete(req.params.id);
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao remover paciente", details: err.message });
+  }
+});
+
+// Rota de teste
+app.get("/", (req, res) => {
+  res.send("API está rodando!");
 });
 
 // Inicialização do servidor
