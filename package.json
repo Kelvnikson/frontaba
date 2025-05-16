@@ -4,7 +4,8 @@
   "description": "API backend para pacientes",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "showlog": "cat /root/.npm/_logs/*.log || echo 'Log não encontrado'"
   },
   "author": "Seu Nome",
   "license": "ISC",
